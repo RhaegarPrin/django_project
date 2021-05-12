@@ -1,0 +1,9 @@
+<h1>BILLS</h1>
+
+{% for item in bills %}
+		<div style="border: 1px solid black" id={{item.id}}>
+			<p>Bill ID :  {{ item.id }}</p>
+			<p>Total :  {{ item.total }}</p>
+			<p>Date:  {{ item.order_date }}</p>
+		</div>
+{%endfor%}

@@ -1,0 +1,25 @@
+Sign up Here
+
+<div>
+	<form method='POST' action ={% url 'register' %}> <br> <br>
+		{% csrf_token %}
+		<div class= 'form-group'>
+			<label>Enter your user Name</label><br>
+			<input type="text" name="userName" placeholder="user name"> <br> <br>
+		</div>
+		<div class = 'form-group'>
+			<label>Enter your Password</label><br>
+			<input type="text" name="password" placeholder = 'password'><br> <br>
+		</div>
+		<div class = 'form-group'>
+			<label>Enter your Full Name</label><br>
+			<input type='text' name = 'name' placeholder="Full name"> <br><br>
+		</div>
+		<div class= 'form-group'>
+			<label>Enter your email</label><br>
+			<input type = 'email' name = email placeholder="ab@cd.com"> <br><br>
+		</div>
+		<button>Sign up </button> <br>
+
+	</form>
+<div>

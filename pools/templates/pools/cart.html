@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Cart</title>
+</head>
+<body>
+	{% for item in cart %}
+		<div style="border: 2px solid black ; background-color: lightblue" id={{item.id}}>
+			<p>Order ID :  {{ item.id }}</p>
+			<p>Product ID :  {{ item.product_id }}</p>
+			<p>Product Price :  {{ item.product_price }}</p>
+			<p>Total :  {{ item.total }}</p>
+			<p>Date:  {{ item.order_date }}</p>
+			<p>Status:  {{ item.order_status }}</p>
+			<button onclick="cancle({{item.id}})">Cancle order</button>
+		</div>
+		<br>
+	{%endfor%}
+		<form id="delete" method="POST">
+			{% csrf_token %}
+			<button type = "submit">BUY</button>
+		</form>
+
+
+	<script src="/static/js/jquery-2.2.4.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>	
+
+	<script>
+		var list_id = [];
+		cancle = function(value){
+			console.log(value);
+			if( list_id.includes(value) == false)
+				list_id.push(value);
+			console.log(list_id);
+			var str_id = String(value);
+			document.getElementById(str_id).style.display = "none";
+		}
+		$(document).on('submit','#delete',function(e){
+			console.log("list : " + list_id);
+			e.preventDefault();
+			console.log('click btn');
+			var myJsonString = JSON.stringify(list_id);
+			$.ajax({
+				type : 'POST',
+				url:'{% url "order" %}',
+				data:{
+					msg :myJsonString,
+					dataType : 'json',
+					csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),	
+					action : 'post'
+				},
+				success:function(json){
+						console.log(json);
+						location.reload();
+				}
+
+			})
+		});
+		
+
+	</script>
+
+
+</body>
+</html>

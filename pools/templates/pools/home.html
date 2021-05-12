@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title> TEST </title>
+</head>
+<body>
+	<form method="POST" id="form-1">
+		{% csrf_token %}
+		<input type="text" id="msg"> <br>
+		<button type = 'submit'> TEST </button>
+	</form>
+</body>
+	<script src="/static/js/jquery-2.2.4.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>	
+	<script>
+		$(document).on('submit','#form-1',function(e){
+			e.preventDefault();
+			console.log('click btn');
+			$.ajax({
+				type : 'POST',
+				url:'{% url "home" %}',
+				data:{
+					msg :$('#msg').val(),
+					csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),	
+					action : 'post'
+				},
+				success:function(json){
+						console.log(json);
+				}
+
+			})
+		});
+	</script>
+	
+</html>
+
+<!-- <script src="./ex.js"></script> -->
