@@ -1,9 +1,87 @@
 <h1>BILLS</h1>
+			<div id="address">
+				<div id="orders"></div>
+				<p id="city">----</p>
+				<p id="district"></p>
+				<p id="house"></p>
+				<p id="status"></p>
+				<div id="items"> </div>
+			</div>
 
-{% for item in bills %}
-		<div style="border: 1px solid black" id={{item.id}}>
-			<p>Bill ID :  {{ item.id }}</p>
-			<p>Total :  {{ item.total }}</p>
-			<p>Date:  {{ item.order_date }}</p>
-		</div>
-{%endfor%}
+			<div id= "items"></div>
+
+
+	<div style="border: 1px solid black" id="detail">
+		{% for item in bills %}
+				<div style="border: 1px solid black" >
+				<p>Bill ID :  {{ item.id }}</p>
+				<p>Total :  {{ item.total }}</p>
+				<p>Date:  {{ item.order_date }}</p>
+
+				<form id={{item.id}} method="POST">
+					{% csrf_token %}
+					<input type="hidden" id="bill_id" value={{ item.id }} name="bill_id">
+					<button onclick="test({{item.id}})"> detail </button>
+				</form>
+			</div>
+		{%endfor%}
+</div>
+
+<script src="/static/js/jquery-2.2.4.min.js"></script>
+<script src="/static/js/bootstrap.min.js"></script>
+
+<script >
+	test = function(value){
+		var form_id = document.getElementById(value);
+		var bill_id = form_id.querySelector('#bill_id').value;
+		var send_msg = JSON.stringify(bill_id);
+		console.log('-----------' , bill_id);
+			$.ajax({
+				type : 'POST',
+				url :'{% url "detail" %}',
+				data :{
+					msg : send_msg,
+					dataType : 'json',
+					csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),	
+					action : 'post'
+				},
+				success : function(json){
+					console.log('ok succsess : ');
+					data = JSON.parse(json.data);
+					address = JSON.parse(json.address)[0] ;
+					status = json.status ;
+					console.log(status);
+					console.log(address);
+					console.log(address.fields.city);
+					var addr_div = document.getElementById("address") ;
+					addr_div.querySelector('#city').innerHTML= "CITY : " +address.fields.city ;
+					addr_div.querySelector('#district').innerHTML= "DISTRICT : " + address.fields.district ;
+					addr_div.querySelector('#house').innerHTML= "HOUSE : " + address.fields.house ;
+					addr_div.querySelector('#status').innerHTML= "STATUS : " + status ;
+					var item_div= document.getElementById('items');
+					for ( i in data){
+						var item_id = document.createElement('p');
+						var item_price = document.createElement('p');
+						var item_total = document.createElement('p');
+						item_id.innerHTML="PRODUCT ID : "+data[i].fields.product_id;
+						item_price.innerHTML="PRODUCT PRICE : " + data[i].fields.product_price;
+						item_total.innerHTML="QUANTITY : " +data[i].fields.total;
+						item_div.appendChild(item_id);
+						item_div.appendChild(item_price);
+						item_div.appendChild(item_total);
+						console.log(data[i]);
+					}
+					var btn_back=document.createElement('button');
+					btn_back.innerHTML="BACK";
+					btn_back.onclick=function(){
+						window.location.reload();
+					}
+					item_div.appendChild(btn_back);
+					document.getElementById('detail').innerHTML="";
+				}
+			});
+	};
+	$(document).on('submit' , function(e){
+		e.preventDefault();
+	});
+</script>

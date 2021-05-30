@@ -9,6 +9,9 @@ from . models import Products
 from . models import order_products
 from . models import product_cmt
 from . models import bill
+from . models import funds
+from . models import * 
+import json
 #from .form import Memberform
 
 from django.views.decorators.csrf import csrf_exempt
@@ -42,6 +45,8 @@ def register(request):
 		mem = Members( userName = us , passWord = passw ,name = n , email = em)
 		print(mem.passWord)
 		mem.save()
+		mem_fund = funds(Member_id=mem.id , fund=0)
+		mem_fund.save()
 		return render (request, 'pools/login.html')
 	else:		
 		return render( request , 'pools/register.html')
@@ -51,7 +56,7 @@ def add2Cart(mem_id , product_id , product_price, total ,order_date , order_stat
 		product.product_quantity -= int(total) 
 		product.save()
 		print(mem_id , product_id , product_price , total , order_date , order_status) 
-		order = order_products( Member_id = mem_id , product_id =  product_id , product_price = product_price ,total=  total,\
+		order = order_products( Member_id = Members.objects.get(id=mem_id) , product_id = Products.objects.get(product_id= product_id) , product_price = product_price ,total=  total,\
 			order_date = order_date , order_status = order_status  )
 		order.save()
 #Tra ve trang san pham da order
@@ -63,6 +68,7 @@ def products(request  ):
 	user = request.COOKIES.get('user')
 	print('cookie id : ' , value)
 	print('cookie user : ' , user)
+	fund = funds.objects.get(Member_id = value)
 	if request.method == 'POST':
 		mem_id=value
 		product_id = request.POST.get('product_id')
@@ -72,21 +78,22 @@ def products(request  ):
 		order_status = 0;
 		print(' order :   ', mem_id , product_id , product_price , quantity , order_date , order_status) 
 		add2Cart( mem_id , product_id , product_price , quantity , order_date , order_status) 
-		return render(request, 'pools/prodcuts.html', {'user' : user ,'all_products' : all_products , 'member_id' : mem_id } )
+		return render(request, 'pools/prodcuts.html', {'user' : user ,'all_products' : all_products , 'member_id' : mem_id, 'fund' : fund } )
 	else :
 		print('GET')
-		return render(request, 'pools/prodcuts.html', {'user' : user ,  'all_products' : all_products , 'member_id' : value } )
+		return render(request, 'pools/prodcuts.html', {'user' : user ,  'all_products' : all_products , 'member_id' : value , 'fund' : fund } )
 
 
 def search(request ) :
 	mem_id = request.COOKIES.get('id')	
 	user = request.COOKIES.get('user')
-	if request.method == 'POST' :
-		name = request.POST.get('key_word')
-		list_product = Products.objects.filter(product_name = name)
-		if list_product == None :
-			return redirect( 'products' )
-		return render(request, 'pools/prodcuts.html', {'user' : user ,'all_products' : list_product , 'member_id' : mem_id } )
+	if request.method == 'GET' :
+		name = request.GET.get('msg')
+		print("name :::: " , name) ;
+		list_product = Products.objects.filter(product_name__contains = name)
+		print ( list_product)
+		data = serializers.serialize('json', list_product)
+		return JsonResponse ( {"data" : data })
 	return redirect( 'products' )
 #login
 def login(request):
@@ -103,27 +110,22 @@ def login(request):
 				print('false')
 	return render (request, 'pools/new_login.html')
 # tra ve tat ca comment cua member co product = product_id
-def product_comment(request ):
+def product_comment(request  ):
 	if request.method == 'GET' :
-		all_cmt = product_cmt.objects.all()
 		product_id = request.GET.get('product_id')
+		all_cmt = product_cmt.objects.filter(product_id=product_id)
 		print('ok cmt' , product_id )
-		list_cmt = []
-		print(type(all_cmt))
-		for cmt in all_cmt :
-			if int(product_id) == cmt.product_id  : 
-				print('matched ' , cmt.cmt )
-				list_cmt.append(cmt)
-		print( type(list_cmt), 'all : ', list_cmt)
-		return render(request , 'pools/product_cmt.html', {'all_cmt':list_cmt} )
+		return render(request , 'pools/product_cmt.html', {'all_cmt':all_cmt} )
 	return redirect( 'products' )
 
 def add_cmt( request) :
 	if request.method == 'POST' :
+
 		product_id = request.POST.get('product_id')
 		cmt = request.POST.get('cmt')
-		Member_id = 1
-		product_cmt_action =  product_cmt(Member_id  = Member_id , product_id = product_id , cmt = cmt)
+		member_id =  request.COOKIES.get('id')
+		print(member_id)
+		product_cmt_action =  product_cmt(Member_id  =Members.objects.get(id=member_id), product_id =Products.objects.get (product_id = product_id ), cmt = cmt)
 		product_cmt_action.save()
 		return redirect('products')
 	return redirect('products')
@@ -136,7 +138,7 @@ def viewCart(request) :
 	cart = order_products.objects.filter(Member_id=value,order_status=0)
 	print("cart  :  ", cart)
 
-	return render (request , 'pools/cart.html', {'cart' : cart})
+	return render (request , 'pools/cart.html', {'cart' : cart, 'mem_id':value})
 
 def view_bills(request) :
 	member_id = request.POST.get('member_id')
@@ -153,12 +155,23 @@ from django.core import serializers
 
 def create_bill(member_id):
 		current_date = datetime.today()
-		new_bill = bill( Member_id=member_id , total=0 , order_date=current_date)
+		new_bill = bill( Member_id=Members.objects.get(id=member_id), total=0 , order_date=current_date)
 		new_bill.save()
 		return new_bill
 
+def update_fund(member_id , total) :
+	if total <= 0 :
+		return False
+	fund = funds.objects.get(Member_id = member_id)
+	if( fund.fund >= total and total > 0) :
+		fund.fund -= total 
+		fund.save()
+		return True
+	return False 
+
 def order(request) :
-	if request.POST.get('action')=='post':
+	print(request.method)
+	if request.method=='POST':
 		msg = request.POST.get('msg')
 		msg = msg.replace('[',"")
 		msg = msg.replace(']',"")
@@ -171,23 +184,83 @@ def order(request) :
 		print(all)
 		list_payment=[]
 		total = 0
-		new_bill = create_bill(member_id)
+		chosen_items = []
+		result = "false"
 		for item in all :
 			print(item.id)
 			if  (str(item.id) in res )  == False:
 				total += item.total*item.product_price
+				chosen_items.append(item)
+		if	update_fund(member_id , total)	== True :
+			address = Address.objects.filter(Member_id=member_id)[0]
+			employee= Employee.objects.get(id=1)
+
+			print('total = ',total)
+			new_bill = create_bill(member_id)
+			for item in chosen_items :
 				item.order_status = new_bill.id + 1
 				item.save()
-				list_payment.append(item)
-				print(item, 'saved')
-		new_bill.total = total
-		new_bill.save()
-		list = order_products.objects.filter(Member_id=member_id , order_status= 0)
-		#filter by id in msg 
-		print(list)
-		#data = serializers.serialize('json', list_payment)
-		#print(data)
-		#return redirect('products')
+				result= "true"
+			new_bill.total = total
+			new_bill.save()
+			shipping(bill_fk= new_bill , Employee_fk=employee , Address_fk=address).save()
+			list = order_products.objects.filter(Member_id=member_id , order_status= 0)
+			print(list )
+			print(result)
+			address = Address.objects.filter(Member_id = member_id)
+			print(address)
+			addr = serializers.serialize('json', address)
+			return JsonResponse( {"data":result  , "address" : addr , "bill_id" :str(new_bill.id)} )
+		# print('DATA : ',data)
+		return JsonResponse( {"data":result  , "address" : addr } )
 	return render (request, 'pools/home.html' )
 
+def detail(request):
+	print('called')
+	if request.method=='POST':
+		msg = request.POST.get('msg')
+		msg = msg.replace('"',"")
+		print(type(msg),'-----------',msg)
+		ship_detail= shipping.objects.get(bill_fk=msg)
+		status = ship_detail.status 
+		address = Address.objects.filter(id=ship_detail.Address_fk.id)
+		bil_id = int(msg)+1
+		list_order = order_products.objects.filter(order_status=bil_id)
+		for item in list_order :
+			print(item.id,"- " , item.total, " - " , item.product_price)
+
+		data = serializers.serialize('json', list_order)
+		address_json = serializers.serialize('json', address)
+		print(data)
+		return JsonResponse( {"data" : data , "address" : address_json , "status" : status} )
+def filter(request):
+	if request.method == 'GET' :
+		tag = request.GET.get('msg')
+		print(type(tag))
+		print('filter by' + tag)		
+		list_product = Products.objects.filter(product_tags__contains = tag)
+		print(list_product)
+		data = serializers.serialize('json', list_product)
+		return JsonResponse ( {"data" : data })
+	return redirect('products')
+
+def address(request) :
+	if request.method=="POST":
+		mem_id =  request.POST.get('mem_id');
+		bill_id =  request.POST.get('bill_id');
+		city_ = request.POST.get('city');
+		district_ = request.POST.get('district');
+		house_ = request.POST.get('house');
+		print( mem_id , city_ , district_ , house_)
+		add = Address.objects.filter(Member_id=mem_id , city=city_ , district = district_ , house=house_)
+		if add.exists() :
+			print("0--------" ,add)
+		else :
+			print('none')
+			address =Address(Member_id= Members.objects.get(id=mem_id) , city=city_ , district = district_ , house=house_)
+			address.save()
+			ship_with_other_address = shipping.objects.get(bill_fk=bill_id)
+			ship_with_other_address.Address_fk= address
+			ship_with_other_address.save()
+		return redirect('products')
 

@@ -8,10 +8,13 @@ urlpatterns = [
     path('register/', views.register,  name = 'register'),
     path('products/', views.products, name = 'products'),
     path('login/' , views.login , name = 'login'),
-    path('products/search/' , views.search , name = 'search'),
+    path('search/' , views.search , name = 'search'),
+    path('filter' , views.filter , name = 'filter'),
     path('products/product_cmt/' , views.product_comment , name = 'product_cmt'),
     path('products/add_cmt/', views.add_cmt , name = 'products/add_cmt'),
     path('products/view_cart/', views.viewCart, name = 'products/add_cmt'),
     path('products/view_bills/', views.view_bills , name = 'products/view_bills'),
-    path('order/', views.order, name = 'order')
+    path('order/', views.order, name = 'order'),
+    path('products/view_cart/address/', views.address, name = 'address'),
+    path('detail/', views.detail, name = 'detail')
 ]

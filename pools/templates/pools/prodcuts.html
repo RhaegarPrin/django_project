@@ -45,12 +45,30 @@
 <body>
 	<h1 style="text-align:center" id = "datetime"></h1>
 	<h1 style="text-align:center" >Hallo {{ user }} --- {{member_id}} </h1>
+	<h1 style="text-align:center" >{{fund}} </h1>
 
-	<form action="search/" method = "POST">
-		{% csrf_token %}
-		<input type = "text" name = "key_word" placeholder="Search">
-		<button>Search</button>
+
+
+		<div id="test vui">
+			<button onclick=" testvui('sdsd') "> dfsddfs </button>
+		</div>
+
+	<form id="search">
+		<!--{% csrf_token %} -->
+		<input id = "key_word" type = "text" name = "key_word" placeholder="Search">
+		<button onclick= "return search('search')">Search</button>
 	</form>
+
+		<form id="filter" action="filter" method="get">
+			<select name = "tag" id = "tag">
+				<option value="all">All</option>
+				<option value="personal item">personal item</option>
+				<option value="food">food</option>
+				<option value="art">art</option>
+				<option value="flower">flower</option>
+			</select>
+			<button onclick="return get_by_tag('filter')"> Filter </button>
+		</form>
 
 	<form action = "view_bills/" method=post class="form-control">
 		{% csrf_token %}
@@ -65,15 +83,22 @@
 		<button> Cart </button>
 	</form>
 
+	<div id="demo">
+		{% load static %} 
+	</div>
 
-	<div>
+
+	<div id ="all" >
 		{% for item in all_products %}
-		<div class="card" color = "white">
+		{% load static %} 
+		<div class="card" id = "{{item.product_name}}1"  color = "white"  display = "inline-block">
+		<img src="{% static item.product_img %}"  width="300" height="300">
 		<p>Product ID :  {{ item.product_id }}</p>
 		<p class = >NAME :  {{ item.product_name }}</p>
 		<p class="price">Price : {{ item.product_price }}</p>
-		<p class= >Total : {{ item.product_quantity }}</p>
-			<form  id = {{item.product_name}}  method='POST' >
+		<p >Total : {{ item.product_quantity }}</p>
+		<input id="quantity" type="hidden" name="quantity" value={{ item.product_quantity }}>
+			<form  id ="{{item.product_name}}"  method='POST' >
 				{% csrf_token %}
 				<div class= 'form-group'>
 					<label>enter your quantity</label><br>
@@ -81,9 +106,9 @@
 					<input id = "product_id" type="hidden" name = "product_id" value={{item.product_id}}>
 					<input id = "product_price" type="hidden" name = "product_price" value={{item.product_price}}>
 				</div>
-				<button>ADD</button>
+	
+				<button onclick="return cart('{{item.product_name}}')"> ADD2</button>
 			</form>
-			<!-- <button onclick="cart({{item.product_name}})">ADD2</button><br><br> -->
 				
 			<br>
 			<form action = 'add_cmt/' method="POST"> 
@@ -99,38 +124,173 @@
 				<button style="border: 1px solid red" >view comment</button>
 			</form>
 		</div>
+		<br>
+		{% endfor %}
 	</div>
-	{% endfor %}
-		<form>
-			
-		</form>
 
-			<script>
+
+		<script src="/static/js/jquery-2.2.4.min.js"></script>
+		<script src="/static/js/bootstrap.min.js"></script>
+		<script>
 			var order_list = [] ;
 			cart = function(name){
-				console.log(name.querySelector('#product_id').value);
-				var order ={
-					product_id : name.querySelector('#product_id').value,
-					quantity : name.querySelector('#quantity').value,
-					product_price : name.querySelector('#product_price').value
-				};
-				order_list.push(order);
-				for( i =0 ; i < order_list.length ;i++) {
-					console.log(order_list[i].product_id + " -- " + order_list[i].quantity);
+				var div_cart =  document.getElementById(name+"1") ;
+				var total_supply = div_cart.querySelector('#quantity').value;
+				var div_item = document.getElementById(name);
+				var order_quantity =  div_item.querySelector('#quantity').value;
+				console.log( total_supply);
+				console.log( order_quantity);
+				if(parseFloat(total_supply) < parseFloat(order_quantity) || parseFloat(order_quantity) <=0 ){
+					alert("Total total_supply is  :  " + total_supply);
+					return false;
+
 				}
-				console.log(order_list.length);
-			}
-			get_order = function(){
-				return order_list; 
-			}
-
+				var dt = new Date();
+				document.getElementById("datetime").innerHTML=dt.toLocaleString();
+				alert('success');
+				return true;
+			};
 		</script>
 
+<!--ONLICK SEARCH BY KEYWORD -->
 		<script>
-			var dt = new Date();
-			document.getElementById("datetime").innerHTML=dt.toLocaleString();
+			search = function(value){
+				
+				div = document.getElementById(value);
+				key_word = div.querySelector('#key_word').value;
+				console.log(key_word);
+				$.ajax({
+					type : 'GET',
+					url :'{% url "search" %}',
+					data :{
+						msg : key_word,
+						dataType : 'json',
+						// csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),	
+						action : 'get'
+					},
+					success : function(json){
+						console.log(typeof(json));
+						display_obj_json(json);
+						
+					}
+				});
+				return false ;
+			};
 		</script>
 
+<!-- ONLICK GET OBJECTS BY TAG -->
+		<script >
+			get_by_tag= function(value){				
+				div = document.getElementById(value);
+				key_word = div.querySelector('#tag').value;
+				console.log(key_word);
+				$.ajax({
+					type : 'GET',
+					url :'{% url "filter" %}',
+					data :{
+						msg : key_word,
+						dataType : 'json',
+						// csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),	
+						action : 'get'
+					},
+					success : function(json){
+						console.log(typeof(json));
+						display_obj_json(json);
+						
+					}
+				});
+				return false ;
+			}
+		</script>>
+	
+<!-- DISPLAY OBJECTS JSON TYPE -->
+		<script >
+			testvui= function(value){
+				console.log(value);
+			}
+			display_obj_json = function(json){
+				document.getElementById('demo').innerHTML="";
+						console.log(json.data);
+						var myObj = JSON.parse(json.data);
+						console.log(myObj);
+						for( i in myObj ){
+							// test get attributes
+							var product_id = myObj[i].pk ;
+							var product_name = myObj[i].fields.product_name;
+							var product_price = myObj[i].fields.product_price;
+							var product_quantity = myObj[i].fields.product_quantity;
+							var product_img = myObj[i].fields.product_img;
+
+							console.log(product_name );
+
+							//Create dive
+							var item_div =document.createElement("div");
+							item_div.className="card" ;
+							item_div.id=myObj[i].fields.product_name+"1";
+
+							var form = document.createElement("form");
+							form.setAttribute("method", "post");
+							form.id=product_name;
+							var token = $('input[name="csrfmiddlewaretoken"]').val();
+							var csrf = document.createElement('input'); 
+							csrf.type="hidden";
+							csrf.name = "csrfmiddlewaretoken";
+							csrf.value=token;
+							form.appendChild(csrf);
+
+							var item_id =document.createElement("p");
+							var item_name =document.createElement("p");
+							var item_price =document.createElement("p");
+							var item_quantity =document.createElement("p");
+							var item_img = document.createElement('img');
+							var input_quantity = document.createElement('input');
+							var input_product_id = document.createElement('input');
+							var input_product_price = document.createElement('input');
+
+							input_product_id.type="hidden";
+							input_product_id.name="product_id";
+							input_product_id.value = product_id;
+							form.appendChild(input_product_id)
+
+							input_product_price.type="hidden";
+							input_product_price.name="product_price";
+							input_product_price.value=product_price;
+							form.appendChild(input_product_price);
+
+							item_quantity.id="quantity";
+							input_quantity.type="number";
+							input_quantity.name="quantity";
+							input_quantity.id="quantity";
+							form.appendChild(input_quantity);
+
+							var btn_Add2 =  document.createElement('button');
+							btn_Add2.onclick= function(){
+								return  cart(myObj[i].fields.product_name);
+							}
+							// btn_Add2.type="button";
+							btn_Add2.innerHTML="ADD2";
+
+							item_id.appendChild( document.createTextNode("ID : " + myObj[i].pk)) ;
+							item_name.appendChild( document.createTextNode("NAME : " + myObj[i].fields.product_name)) ;
+							item_price.appendChild( document.createTextNode("Price : " +myObj[i].fields.product_price)) ;
+							item_quantity.appendChild( document.createTextNode("Quantity :"+myObj[i].fields.product_quantity)) ;
+							item_img.src='/static/' + myObj[i].fields.product_img;
+							item_img.width=300;
+							item_img.height=300;
+
+							item_div.appendChild(item_img);
+							item_div.appendChild(item_id);
+							item_div.appendChild(item_name);
+							item_div.appendChild(item_price);
+							item_div.appendChild(item_quantity);
+							form.appendChild(btn_Add2);
+							item_div.appendChild( form );
+
+							document.getElementById("demo").appendChild(item_div);
+
+							document.getElementById("all").innerHTML="" ;
+						}
+			}
+		</script>
 </body>
 </html>
-<script type="text/javascript"></script>

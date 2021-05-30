@@ -1,29 +1,54 @@
+
+
 <!DOCTYPE html>
 <html>
 <head>
 	<title>Cart</title>
 </head>
 <body>
-	{% for item in cart %}
-		<div style="border: 2px solid black ; background-color: lightblue" id={{item.id}}>
-			<p>Order ID :  {{ item.id }}</p>
-			<p>Product ID :  {{ item.product_id }}</p>
-			<p>Product Price :  {{ item.product_price }}</p>
-			<p>Total :  {{ item.total }}</p>
-			<p>Date:  {{ item.order_date }}</p>
-			<p>Status:  {{ item.order_status }}</p>
-			<button onclick="cancle({{item.id}})">Cancle order</button>
-		</div>
-		<br>
-	{%endfor%}
-		<form id="delete" method="POST">
+	<h1 style="text-align:center" >{{ mem_id }}</h1>
+	<form id="address" action="address/" method="post">
+		{% csrf_token %}
+			<p naem = "msg" id="msg"></p>
+		<tr>
+			<input  name="mem_id" id="mem_id" type="hidden" value={{ mem_id }}>
+			<input  name="bill_id" id="bill_id" type="hidden" >
+			<td> City 	 : <input  name="city" id="city" type="hidden"><br> </td>
+			<td> DISTRICT : <input  name="district" id="district" type="hidden"><br>  </td>
+			<td> HOUSE    : <input  name="house" id="house" type="hidden"><br> </td>
+		</tr>
+	</form>
+	<div id="all">
+		{% for item in cart %}
+			<div style="border: 2px solid black ; background-color: lightblue" id={{item.id}}>
+				<p>Order ID :  {{ item.id }}</p>
+				<p>Product ID :  {{ item.product_id }}</p>
+				<p>Product Price :  {{ item.product_price }}</p>
+				<p>Total :  {{ item.total }}</p>
+				<p>Date:  {{ item.order_date }}</p>
+				<p>Status:  {{ item.order_status }}</p>
+				<button onclick="cancle({{item.id}})">Cancle order</button>
+			</div>
+			<br>
+		{%endfor%}
+	</div>
+		<form id="buy" method="post">
 			{% csrf_token %}
 			<button type = "submit">BUY</button>
 		</form>
 
 
+
+
+
 	<script src="/static/js/jquery-2.2.4.min.js"></script>
     <script src="/static/js/bootstrap.min.js"></script>	
+    
+    <script >
+    	buy = function(){
+    		console.log(mem_id);
+    	}	
+    </script>
 
 	<script>
 		var list_id = [];
@@ -35,7 +60,9 @@
 			var str_id = String(value);
 			document.getElementById(str_id).style.display = "none";
 		}
-		$(document).on('submit','#delete',function(e){
+
+
+		$(document).on('submit','#buy',function(e){
 			console.log("list : " + list_id);
 			e.preventDefault();
 			console.log('click btn');
@@ -50,8 +77,46 @@
 					action : 'post'
 				},
 				success:function(json){
-						console.log(json);
-						location.reload();
+						console.log(json.data);
+						var address = JSON.parse(json.address);
+						console.log(address[0]);
+						if(json.data == "false")
+							alert("Not enough fund or dont have any item in cart yet !");
+						else {
+							alert("success Purchare");
+							console.log(json.bill_id);
+							var address_div = document.getElementById('address');
+							var city = address_div.querySelector('#city');
+							var district = address_div.querySelector('#district');
+							var house = address_div.querySelector('#house');
+
+							city.placeholder=address[0].fields.city ;
+							district.placeholder=address[0].fields.district ;
+							house.placeholder=address[0].fields.house ;
+							address_div.style.display="block";
+
+							document.getElementById('all').innerHTML="";
+							var address_div = document.getElementById('address');
+							var city = address_div.querySelector('#city');
+							var district = address_div.querySelector('#district');
+							var house = address_div.querySelector('#house');
+							var btn = document.createElement('button') ;
+							address_div.querySelector('#bill_id').value=json.bill_id;
+							btn.innerHTML="Confirm";
+							address_div.appendChild(btn);
+							city.type="text";
+							city.placeholder=address[0].fields.city ;
+							city.value=address[0].fields.city ;
+							district.type="text";
+							district.placeholder=address[0].fields.district ;
+							district.value=address[0].fields.district ;
+							house.type="number";
+							house.placeholder=address[0].fields.house ;	
+							house.value=address[0].fields.house ;	
+							address_div.querySelector('#msg').innerHTML="Use current Address or another ( form below) ?" ;
+						}				
+						// window.location.reload();
+						// location.replace("http://localhost:8000/Pools/products")
 				}
 
 			})
