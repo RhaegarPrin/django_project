@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.http import HttpResponse , JsonResponse
 from datetime import datetime
 
-from . models import Members
+from . models import Customer as Members 
 from . models import Products 
 from . models import order_products
 from . models import product_cmt

@@ -1,0 +1,57 @@
+Warehouse
+<style>
+	div.itemForm{
+		height: 200px;
+		width : 200px;
+		background-color: tomato;
+  		color: white;
+  		border: 2px solid black;
+  		margin: 20px;
+  		padding: 20px;
+  		display: inline-block;
+	}	
+	form.add{
+		visibility: hidden;
+	}
+</style>
+
+<div id="div_add">
+	<button onclick="addForm()">New Item</button>
+	<form id="add" class="add" action="add" method="GET">
+		NAME     :<input type="text" name="name"><br>
+		PRICE    :<input type="number" name="price" value="0"><br>
+		QUANTITY :<input type="number" name="quantity" value="0"><br>
+		IMG Src  :<input type="text" name="img" value="None"><br>
+		ITEM TAG :<input type="text" name="tage" value="None"><br>
+		<button>Add</button>
+	</form>
+</div>
+
+<div>
+	{% for item in items %}
+	{% load static %}
+	<div class="itemForm">
+		<img src="{% static item.item_img %}" height="100">
+		<p>ID :{{ item.item_id}}</p>
+		<p>NAME :{{item.iteem_name}}</p>
+		<p>PRICE :{{item.item_price}}</p>
+		<p>QUANTITY :{{item.item_quantity}}</p>
+		<form method="POST">
+			{% csrf_token %}
+			<input type="hidden" name="item_id" value={{item.item_id}}>
+			<input type="text" name="name" placeholder="ItemName" value={{item.iteem_name}}><br>
+			<input type="number" name="price" placeholder="Price" value={{item.item_price}}><br>
+			<input type="number" name="quantity" placeholder="Quantity"value="0"><br>
+			<button>submit</button>
+		</form>
+	</div>
+	{% endfor %}
+</div>
+
+<script >
+	addForm = function(){
+		div_f = document.getElementById("div_add");
+		form_dic = div_f.querySelector('#add').style.visibility="visible";
+		console.log(form_dic);
+	}
+</script>

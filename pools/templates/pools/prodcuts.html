@@ -1,26 +1,28 @@
-
 <!DOCTYPE html>
 <html>
+
 <head>
 	<title></title>
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
-    <style>
-	.card {
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+		integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"
+		integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+	<style>
+		/* .card {
 	  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 	  max-width: 300px;
 	  margin: auto;
 	  text-align: center;
 	  font-family: arial;
 	  background-color: white
-	}
+	} */
 
-	.price {
-	  color: grey;
-	  font-size: 22px;
-	}
+		.price {
+			color: greenyellow;
 
-	.card button {
+		}
+
+		/* .card button {
 	  border: 2px;
 	  outline: 0;
 	  padding: 12px;
@@ -30,267 +32,508 @@
 	  cursor: pointer;
 	  width: 100%;
 	  font-size: 18px;
-	}
+	} */
 
-	.card button:hover {
-	  opacity: 0.7;
-	}
+		.card button:hover {
+			opacity: 0.7;
+		}
 
-	body {
-	  background-color: lightblue;
-	}
-	
-</style>
+		/* body {
+			background-color: lightblue;
+		} */
+	</style>
 </head>
+
 <body>
-	<h1 style="text-align:center" id = "datetime"></h1>
-	<h1 style="text-align:center" >Hallo {{ user }} --- {{member_id}} </h1>
-	<h1 style="text-align:center" >{{fund}} </h1>
+	<header class="header ">
+		<!--
+      *** TOPBAR ***
+      _________________________________________________________
+      -->
+		<div id="top">
+			<div class="container-fluid bg-dark">
+				<div class="row">
+					<div class="col-lg-6 offer mb-3 mb-lg-0"><a href="#" class="btn btn-success btn-sm">Offer of the
+							day</a><a href="#" class="ml-1">Get flat 35% off on orders over $50!</a></div>
+					<div class="col-lg-6 text-center text-lg-right">
+						<ul class="menu list-inline mb-0">
+							<li class="list-inline-item"><a href="#" data-toggle="modal" data-target="#login-modal">
+									Hallo {{ user }} :${{fund}} </a></li>
+							<li class="list-inline-item"><a href="register.html">Register</a></li>
+							<li class="list-inline-item"><a href="contact.html">Contact</a></li>
+							<li class="list-inline-item">
+								<form action="view_bills/" method=post >
+									{% csrf_token %}
+									<input type="hidden" name="member_id" value={{member_id}} placeholder={{member_id}}>
+									<button class="btn "> View Bills </button>
+								</form>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div id="login-modal" tabindex="-1" role="dialog" aria-labelledby="Login" aria-hidden="true"
+				class="modal fade">
+				<div class="modal-dialog modal-sm">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title">Customer login</h5>
+							<button type="button" data-dismiss="modal" aria-label="Close" class="close"><span
+									aria-hidden="true">×</span></button>
+						</div>
+						<div class="modal-body">
+							<form action="customer-orders.html" method="post">
+								<div class="form-group">
+									<input id="email-modal" type="text" placeholder="email" class="form-control">
+								</div>
+								<div class="form-group">
+									<input id="password-modal" type="password" placeholder="password"
+										class="form-control">
+								</div>
+								<p class="text-center">
+									<button class="btn btn-primary"><i class="fa fa-sign-in"></i> Hallo {{ user }} ---
+										{{member_id}} </button>
+								</p>
+							</form>
+							<p class="text-center text-muted">Not registered yet?</p>
+							<p class="text-center text-muted"><a href="register.html"><strong>Register now</strong></a>!
+								It is easy and done in 1 minute and gives you access to special discounts and much more!
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- *** TOP BAR END ***-->
 
 
-
-		<div id="test vui">
-			<button onclick=" testvui('sdsd') "> dfsddfs </button>
 		</div>
+		<nav class="navbar navbar-expand-lg">
+			<div class="container-fluid"><a href="index.html" class="navbar-brand home"><img src="img/logo.png"
+						alt="Obaju logo" class="d-none d-md-inline-block"><img src="img/logo-small.png" alt="Obaju logo"
+						class="d-inline-block d-md-none"><span class="sr-only">Obaju - go to homepage</span></a>
+				<div class="navbar-buttons">
+					<button type="button" data-toggle="collapse" data-target="#navigation"
+						class="btn btn-outline-secondary navbar-toggler"><span class="sr-only">Toggle
+							navigation</span><i class="fa fa-align-justify"></i></button>
+					<button type="button" data-toggle="collapse" data-target="#search"
+						class="btn btn-outline-secondary navbar-toggler"><span class="sr-only">Toggle search</span><i
+							class="fa fa-search"></i></button><a href="basket.html"
+						class="btn btn-outline-secondary navbar-toggler"><i class="fa fa-shopping-cart"></i></a>
+				</div>
+				<div id="navigation" class="collapse navbar-collapse">
+					<ul class="navbar-nav mr-auto">
+						<li class="nav-item"><a href="#" class="nav-link active">Home</a></li>
+						<li class="nav-item dropdown menu-large"><a href="#" data-toggle="dropdown"
+								data-hover="dropdown" data-delay="200" class="dropdown-toggle nav-link">Clothes<b
+									class="caret"></b></a>
+							<ul class="dropdown-menu megamenu">
+								<li>
+									<div class="row">
+										<div class="col-md-6 col-lg-3">
+											<h5>Clothing</h5>
+											<ul class="list-unstyled mb-3">
+												<li class="nav-item"><a href="category.html"
+														class="nav-link">T-shirts</a></li>
+												<li class="nav-item"><a href="category.html" class="nav-link">Shirts</a>
+												</li>
+												<li class="nav-item"><a href="category.html" class="nav-link">Pants</a>
+												</li>
+												<li class="nav-item"><a href="category.html"
+														class="nav-link">Accessories</a></li>
+											</ul>
+										</div>
+										<div class="col-md-6 col-lg-3">
+											<h5>elictric</h5>
+											<ul class="list-unstyled mb-3">
+												<li class="nav-item"><a href="category.html"
+														class="nav-link">Trainers</a></li>
+												<li class="nav-item"><a href="category.html"
+														class="nav-link">Sandals</a></li>
+												<li class="nav-item"><a href="category.html" class="nav-link">Hiking
+														shoes</a></li>
+												<li class="nav-item"><a href="category.html" class="nav-link">Casual</a>
+												</li>
+											</ul>
+										</div>
+										<div class="col-md-6 col-lg-3">
+											<h5>gia dung</h5>
+											<ul class="list-unstyled mb-3">
+												<li class="nav-item"><a href="category.html"
+														class="nav-link">Trainers</a></li>
+												<li class="nav-item"><a href="category.html"
+														class="nav-link">Sandals</a></li>
+												<li class="nav-item"><a href="category.html" class="nav-link">Hiking
+														shoes</a></li>
+												<li class="nav-item"><a href="category.html" class="nav-link">Casual</a>
+												</li>
+												<li class="nav-item"><a href="category.html" class="nav-link">Hiking
+														shoes</a></li>
+												<li class="nav-item"><a href="category.html" class="nav-link">Casual</a>
+												</li>
+											</ul>
+										</div>
+										<div class="col-md-6 col-lg-3">
+											<h5>Featured</h5>
+											<ul class="list-unstyled mb-3">
+												<li class="nav-item"><a href="category.html"
+														class="nav-link">Trainers</a></li>
+												<li class="nav-item"><a href="category.html"
+														class="nav-link">Sandals</a></li>
+												<li class="nav-item"><a href="category.html" class="nav-link">Hiking
+														shoes</a></li>
+											</ul>
+											<h5>Looks and trends</h5>
+											<ul class="list-unstyled mb-3">
+												<li class="nav-item"><a href="category.html"
+														class="nav-link">Trainers</a></li>
+												<li class="nav-item"><a href="category.html"
+														class="nav-link">Sandals</a></li>
+												<li class="nav-item"><a href="category.html" class="nav-link">Hiking
+														shoes</a></li>
+											</ul>
+										</div>
+									</div>
+								</li>
+							</ul>
+						</li>
+						<li class="nav-item dropdown menu-large"><a href="#" data-toggle="dropdown"
+								data-hover="dropdown" data-delay="200" class="dropdown-toggle nav-link">Gia dung<b
+									class="caret"></b></a>
+							<ul class="dropdown-menu megamenu">
+								<li>
+									<div class="row">
+										<div class="col-md-6 col-lg-3">
+											<h5>Clothing</h5>
+											<ul class="list-unstyled mb-3">
+												<li class="nav-item"><a href="category.html"
+														class="nav-link">T-shirts</a></li>
+												<li class="nav-item"><a href="category.html" class="nav-link">Shirts</a>
+												</li>
+												<li class="nav-item"><a href="category.html" class="nav-link">Pants</a>
+												</li>
+												<li class="nav-item"><a href="category.html"
+														class="nav-link">Accessories</a></li>
+											</ul>
+										</div>
+										<div class="col-md-6 col-lg-3">
+											<h5>Shoes</h5>
+											<ul class="list-unstyled mb-3">
+												<li class="nav-item"><a href="category.html"
+														class="nav-link">Trainers</a></li>
+												<li class="nav-item"><a href="category.html"
+														class="nav-link">Sandals</a></li>
+												<li class="nav-item"><a href="category.html" class="nav-link">Hiking
+														shoes</a></li>
+												<li class="nav-item"><a href="category.html" class="nav-link">Casual</a>
+												</li>
+											</ul>
+										</div>
+										<div class="col-md-6 col-lg-3">
+											<h5>Accessories</h5>
+											<ul class="list-unstyled mb-3">
+												<li class="nav-item"><a href="category.html"
+														class="nav-link">Trainers</a></li>
+												<li class="nav-item"><a href="category.html"
+														class="nav-link">Sandals</a></li>
+												<li class="nav-item"><a href="category.html" class="nav-link">Hiking
+														shoes</a></li>
+												<li class="nav-item"><a href="category.html" class="nav-link">Casual</a>
+												</li>
+												<li class="nav-item"><a href="category.html" class="nav-link">Hiking
+														shoes</a></li>
+												<li class="nav-item"><a href="category.html" class="nav-link">Casual</a>
+												</li>
+											</ul>
+											<h5>Looks and trends</h5>
+											<ul class="list-unstyled mb-3">
+												<li class="nav-item"><a href="category.html"
+														class="nav-link">Trainers</a></li>
+												<li class="nav-item"><a href="category.html"
+														class="nav-link">Sandals</a></li>
+												<li class="nav-item"><a href="category.html" class="nav-link">Hiking
+														shoes</a></li>
+											</ul>
+										</div>
+										<div class="col-md-6 col-lg-3">
+											<div class="banner"><a href="#"><img src="img/banner.jpg" alt=""
+														class="img img-fluid"></a></div>
+											<div class="banner"><a href="#"><img src="img/banner2.jpg" alt=""
+														class="img img-fluid"></a></div>
+										</div>
+									</div>
+								</li>
+							</ul>
+						</li>
+					</ul>
+					<div class="navbar-buttons d-flex justify-content-end">
+						<!-- /.nav-collapse-->
+						<div id="search-not-mobile" class="navbar-collapse collapse"></div><a data-toggle="collapse"
+							href="#search" class="btn navbar-btn btn-primary d-none d-lg-inline-block"><span
+								class="sr-only">Toggle search</span><i class="fa fa-search"></i></a>
+						<div id="basket-overview" class="navbar-collapse collapse d-none d-lg-block">
 
-	<form id="search">
-		<!--{% csrf_token %} -->
-		<input id = "key_word" type = "text" name = "key_word" placeholder="Search">
-		<button onclick= "return search('search')">Search</button>
-	</form>
+							<form action="view_cart/" method="POST">
+								{% csrf_token %}
+								<input type="hidden" name="member_id" value={{member_id}} placeholder={{member_id}}>
+								<button class="btn btn-primary navbar-btn"> <i class="fa fa-shopping-cart"></i>Cart
+								</button>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</nav>
+		<div id="search" class="collapse">
+			<div class="container">
+				<form role="search" class="ml-auto">
+					<div class="input-group">
+						<input type="text" placeholder="Search" class="form-control" id="key_word" name="key_word">
+						<div class="input-group-append">
+							<button onclick="return search('search')" type="button" class="btn btn-primary"><i
+									class="fa fa-search"></i></button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</header>
 
-		<form id="filter" action="filter" method="get">
-			<select name = "tag" id = "tag">
-				<option value="all">All</option>
-				<option value="personal item">personal item</option>
-				<option value="food">food</option>
-				<option value="art">art</option>
-				<option value="flower">flower</option>
-			</select>
-			<button onclick="return get_by_tag('filter')"> Filter </button>
-		</form>
 
-	<form action = "view_bills/" method=post class="form-control">
-		{% csrf_token %}
-		<input type="hidden" name="member_id" value={{member_id}} placeholder={{member_id}}>
-		<button> View Bills </button>
-	</form>
-
-
-	<form action="view_cart/" method="POST">  
-		{% csrf_token %}
-		<input type="hidden" name="member_id" value={{member_id}} placeholder={{member_id}}>
-		<button> Cart </button>
+	<form id="filter" action="filter" method="get">
+		<select name="tag" id="tag">
+			<option value="all">All</option>
+			<option value="personal item">personal item</option>
+			<option value="food">food</option>
+			<option value="art">art</option>
+			<option value="flower">flower</option>
+		</select>
+		<button onclick="return get_by_tag('filter')"> Filter </button>
 	</form>
 
 	<div id="demo">
-		{% load static %} 
+		{% load static %}
 	</div>
 
+	<div class="container">
 
-	<div id ="all" >
-		{% for item in all_products %}
-		{% load static %} 
-		<div class="card" id = "{{item.product_name}}1"  color = "white"  display = "inline-block">
-		<img src="{% static item.product_img %}"  width="300" height="300">
-		<p>Product ID :  {{ item.product_id }}</p>
-		<p class = >NAME :  {{ item.product_name }}</p>
-		<p class="price">Price : {{ item.product_price }}</p>
-		<p >Total : {{ item.product_quantity }}</p>
-		<input id="quantity" type="hidden" name="quantity" value={{ item.product_quantity }}>
-			<form  id ="{{item.product_name}}"  method='POST' >
-				{% csrf_token %}
-				<div class= 'form-group'>
-					<label>enter your quantity</label><br>
-					<input id="quantity" type="number" name="quantity" placeholder="quantity"> <br> <br>
-					<input id = "product_id" type="hidden" name = "product_id" value={{item.product_id}}>
-					<input id = "product_price" type="hidden" name = "product_price" value={{item.product_price}}>
+
+		<div id="all" class="row">
+			{% for item in all_products %}
+			{% load static %}
+			<div class="card col-3" id="{{item.product_name}}1" color="white">
+				<img src="{% static item.product_img %}" height="250">
+				<div class="card-body ">
+					<div class="row">
+
+
+						<h5 class="card-title col-md-8 "> {{ item.product_name }}</h5>
+						<p class="col-md-4 price ">${{ item.product_price }}</p>
+					</div>
+					<p>Total : {{ item.product_quantity }}</p>
+
+					<form id="{{item.product_name}}" method="POST" class="form-group row">
+						{% csrf_token %}
+						<div class="col-md-8">
+							<input id="quantity" type="number" name="quantity" placeholder="quantity"
+								class="form-control mb-2">
+						</div>
+						<input id="product_id" type="hidden" name="product_id" value={{item.product_id}}>
+						<input id="product_price" type="hidden" name="product_price" value={{item.product_price}}>
+						<div class="col-md-4">
+
+
+							<button onclick="return cart('{{item.product_name}}')" class="btn btn-primary mb-2">
+								ADD</button>
+						</div>
+					</form>
+
+					<!-- <br>
+					<form action='add_cmt/' method="POST">
+						{% csrf_token %}
+						ADD CMT : <input style="border: 2px solid blue" type="text" name="cmt"><br>
+						<input type="hidden" name="product_id" value={{item.product_id}}>
+						<button>Comment</button>
+					</form>
+					<br> -->
+
+					 <form method='GET' action='product_cmt/'>
+						<input type="hidden" name="product_id" value={{item.product_id}}>
+						<button style="border: 1px solid red" class="btn btn-primary">view comment</button>
+					</form> 
 				</div>
-	
-				<button onclick="return cart('{{item.product_name}}')"> ADD2</button>
-			</form>
-				
-			<br>
-			<form action = 'add_cmt/' method="POST"> 
-				{% csrf_token %}
-				ADD CMT  :	 <input style="border: 2px solid blue"  type = "text" name = "cmt"><br>
-				<input type="hidden" name="product_id" value={{item.product_id}}>
-				<button>Comment</button>
-			</form>
-			<br>
-
-			<form method='GET' action= 'product_cmt/' >
-				<input type="hidden" name = "product_id" value={{item.product_id}}>
-				<button style="border: 1px solid red" >view comment</button>
-			</form>
+				<br>
+			</div>
+			{% endfor %}
 		</div>
-		<br>
-		{% endfor %}
 	</div>
 
+	<script src="/static/js/jquery-2.2.4.min.js"></script>
+	<script src="/static/js/bootstrap.min.js"></script>
+	<script>
+		var order_list = [];
+		cart = function (name) {
+			alert(name);
+			var div_cart = document.getElementById(name + "1");
+			var total_supply = div_cart.querySelector('#quantity').value;
+			var div_item = document.getElementById(name);
+			var order_quantity = div_item.querySelector('#quantity').value;
+			console.log(total_supply);
+			console.log(order_quantity);
+			if (parseFloat(total_supply) < parseFloat(order_quantity) || parseFloat(order_quantity) <= 0) {
+				alert("Total total_supply is  :  " + total_supply);
+				return false;
 
-		<script src="/static/js/jquery-2.2.4.min.js"></script>
-		<script src="/static/js/bootstrap.min.js"></script>
-		<script>
-			var order_list = [] ;
-			cart = function(name){
-				var div_cart =  document.getElementById(name+"1") ;
-				var total_supply = div_cart.querySelector('#quantity').value;
-				var div_item = document.getElementById(name);
-				var order_quantity =  div_item.querySelector('#quantity').value;
-				console.log( total_supply);
-				console.log( order_quantity);
-				if(parseFloat(total_supply) < parseFloat(order_quantity) || parseFloat(order_quantity) <=0 ){
-					alert("Total total_supply is  :  " + total_supply);
-					return false;
+			}
+			var dt = new Date();
+			document.getElementById("datetime").innerHTML = dt.toLocaleString();
+			alert('success');
+			return true;
+		};
+	</script>
+
+	<!--ONLICK SEARCH BY KEYWORD -->
+	<script>
+		search = function (value) {
+
+			div = document.getElementById(value);
+			key_word = div.querySelector('#key_word').value;
+			console.log(key_word);
+			$.ajax({
+				type: 'GET',
+				url: '{% url "search" %}',
+				data: {
+					msg: key_word,
+					dataType: 'json',
+					// csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),	
+					action: 'get'
+				},
+				success: function (json) {
+					console.log(typeof (json));
+					display_obj_json(json);
 
 				}
-				var dt = new Date();
-				document.getElementById("datetime").innerHTML=dt.toLocaleString();
-				alert('success');
-				return true;
-			};
-		</script>
+			});
+			return false;
+		};
+	</script>
 
-<!--ONLICK SEARCH BY KEYWORD -->
-		<script>
-			search = function(value){
-				
-				div = document.getElementById(value);
-				key_word = div.querySelector('#key_word').value;
-				console.log(key_word);
-				$.ajax({
-					type : 'GET',
-					url :'{% url "search" %}',
-					data :{
-						msg : key_word,
-						dataType : 'json',
-						// csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),	
-						action : 'get'
-					},
-					success : function(json){
-						console.log(typeof(json));
-						display_obj_json(json);
-						
-					}
-				});
-				return false ;
-			};
-		</script>
+	<!-- ONLICK GET OBJECTS BY TAG -->
+	<script>
+		get_by_tag = function (value) {
+			div = document.getElementById(value);
+			key_word = div.querySelector('#tag').value;
+			console.log(key_word);
+			$.ajax({
+				type: 'GET',
+				url: '{% url "filter" %}',
+				data: {
+					msg: key_word,
+					dataType: 'json',
+					// csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),	
+					action: 'get'
+				},
+				success: function (json) {
+					console.log(typeof (json));
+					display_obj_json(json);
 
-<!-- ONLICK GET OBJECTS BY TAG -->
-		<script >
-			get_by_tag= function(value){				
-				div = document.getElementById(value);
-				key_word = div.querySelector('#tag').value;
-				console.log(key_word);
-				$.ajax({
-					type : 'GET',
-					url :'{% url "filter" %}',
-					data :{
-						msg : key_word,
-						dataType : 'json',
-						// csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),	
-						action : 'get'
-					},
-					success : function(json){
-						console.log(typeof(json));
-						display_obj_json(json);
-						
-					}
-				});
-				return false ;
+				}
+			});
+			return false;
+		}
+	</script>>
+
+	<!-- DISPLAY OBJECTS JSON TYPE -->
+	<script>
+		testvui = function (value) {
+			console.log(value);
+		}
+		display_obj_json = function (json) {
+			document.getElementById('demo').innerHTML = "";
+			console.log(json.data);
+			var myObj = JSON.parse(json.data);
+			console.log(myObj);
+			for (i in myObj) {
+				// test get attributes
+				var product_id = myObj[i].pk;
+				var product_name = myObj[i].fields.product_name;
+				var product_price = myObj[i].fields.product_price;
+				var product_quantity = myObj[i].fields.product_quantity;
+				var product_img = myObj[i].fields.product_img;
+
+				console.log(product_name);
+
+				//Create dive
+				var item_div = document.createElement("div");
+				item_div.className = "card";
+				item_div.id = myObj[i].fields.product_name + "1";
+
+				var form = document.createElement("form");
+				form.setAttribute("method", "post");
+				form.id = product_name;
+				var token = $('input[name="csrfmiddlewaretoken"]').val();
+				var csrf = document.createElement('input');
+				csrf.type = "hidden";
+				csrf.name = "csrfmiddlewaretoken";
+				csrf.value = token;
+				form.appendChild(csrf);
+
+				var item_id = document.createElement("p");
+				var item_name = document.createElement("p");
+				var item_price = document.createElement("p");
+				var item_quantity = document.createElement("p");
+				var item_img = document.createElement('img');
+				var input_quantity = document.createElement('input');
+				var input_product_id = document.createElement('input');
+				var input_product_price = document.createElement('input');
+
+				input_product_id.type = "hidden";
+				input_product_id.name = "product_id";
+				input_product_id.value = product_id;
+				form.appendChild(input_product_id)
+
+				input_product_price.type = "hidden";
+				input_product_price.name = "product_price";
+				input_product_price.value = product_price;
+				form.appendChild(input_product_price);
+
+				item_quantity.id = "quantity";
+				input_quantity.type = "number";
+				input_quantity.name = "quantity";
+				input_quantity.id = "quantity";
+				form.appendChild(input_quantity);
+
+				var btn_Add2 = document.createElement('button');
+				btn_Add2.onclick = function () {
+					return cart(myObj[i].fields.product_name);
+				}
+				// btn_Add2.type="button";
+				btn_Add2.innerHTML = "ADD2";
+
+				item_id.appendChild(document.createTextNode("ID : " + myObj[i].pk));
+				item_name.appendChild(document.createTextNode("NAME : " + myObj[i].fields.product_name));
+				item_price.appendChild(document.createTextNode("Price : " + myObj[i].fields.product_price));
+				item_quantity.appendChild(document.createTextNode("Quantity :" + myObj[i].fields.product_quantity));
+				item_img.src = '/static/' + myObj[i].fields.product_img;
+				item_img.width = 300;
+				item_img.height = 300;
+
+				item_div.appendChild(item_img);
+				item_div.appendChild(item_id);
+				item_div.appendChild(item_name);
+				item_div.appendChild(item_price);
+				item_div.appendChild(item_quantity);
+				form.appendChild(btn_Add2);
+				item_div.appendChild(form);
+
+				document.getElementById("demo").appendChild(item_div);
+
+				document.getElementById("all").innerHTML = "";
 			}
-		</script>>
-	
-<!-- DISPLAY OBJECTS JSON TYPE -->
-		<script >
-			testvui= function(value){
-				console.log(value);
-			}
-			display_obj_json = function(json){
-				document.getElementById('demo').innerHTML="";
-						console.log(json.data);
-						var myObj = JSON.parse(json.data);
-						console.log(myObj);
-						for( i in myObj ){
-							// test get attributes
-							var product_id = myObj[i].pk ;
-							var product_name = myObj[i].fields.product_name;
-							var product_price = myObj[i].fields.product_price;
-							var product_quantity = myObj[i].fields.product_quantity;
-							var product_img = myObj[i].fields.product_img;
-
-							console.log(product_name );
-
-							//Create dive
-							var item_div =document.createElement("div");
-							item_div.className="card" ;
-							item_div.id=myObj[i].fields.product_name+"1";
-
-							var form = document.createElement("form");
-							form.setAttribute("method", "post");
-							form.id=product_name;
-							var token = $('input[name="csrfmiddlewaretoken"]').val();
-							var csrf = document.createElement('input'); 
-							csrf.type="hidden";
-							csrf.name = "csrfmiddlewaretoken";
-							csrf.value=token;
-							form.appendChild(csrf);
-
-							var item_id =document.createElement("p");
-							var item_name =document.createElement("p");
-							var item_price =document.createElement("p");
-							var item_quantity =document.createElement("p");
-							var item_img = document.createElement('img');
-							var input_quantity = document.createElement('input');
-							var input_product_id = document.createElement('input');
-							var input_product_price = document.createElement('input');
-
-							input_product_id.type="hidden";
-							input_product_id.name="product_id";
-							input_product_id.value = product_id;
-							form.appendChild(input_product_id)
-
-							input_product_price.type="hidden";
-							input_product_price.name="product_price";
-							input_product_price.value=product_price;
-							form.appendChild(input_product_price);
-
-							item_quantity.id="quantity";
-							input_quantity.type="number";
-							input_quantity.name="quantity";
-							input_quantity.id="quantity";
-							form.appendChild(input_quantity);
-
-							var btn_Add2 =  document.createElement('button');
-							btn_Add2.onclick= function(){
-								return  cart(myObj[i].fields.product_name);
-							}
-							// btn_Add2.type="button";
-							btn_Add2.innerHTML="ADD2";
-
-							item_id.appendChild( document.createTextNode("ID : " + myObj[i].pk)) ;
-							item_name.appendChild( document.createTextNode("NAME : " + myObj[i].fields.product_name)) ;
-							item_price.appendChild( document.createTextNode("Price : " +myObj[i].fields.product_price)) ;
-							item_quantity.appendChild( document.createTextNode("Quantity :"+myObj[i].fields.product_quantity)) ;
-							item_img.src='/static/' + myObj[i].fields.product_img;
-							item_img.width=300;
-							item_img.height=300;
-
-							item_div.appendChild(item_img);
-							item_div.appendChild(item_id);
-							item_div.appendChild(item_name);
-							item_div.appendChild(item_price);
-							item_div.appendChild(item_quantity);
-							form.appendChild(btn_Add2);
-							item_div.appendChild( form );
-
-							document.getElementById("demo").appendChild(item_div);
-
-							document.getElementById("all").innerHTML="" ;
-						}
-			}
-		</script>
+		}
+	</script>
 </body>
+
 </html>
+<nav class="navbar navbar-dark bg-dark">
+	<!-- Navbar content -->
+</nav>
